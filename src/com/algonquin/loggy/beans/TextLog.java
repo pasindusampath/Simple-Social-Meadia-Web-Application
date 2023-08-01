@@ -6,8 +6,8 @@ public class TextLog extends Log {
         super();
     }
 
-    public TextLog(String title, String content,String uid,FileUpload ob) {
-        super(title, content,uid,ob);
+    public TextLog(String title, String content,String uid,FileUpload ob,String logId) {
+        super(title, content,uid,ob,logId);
     }
 
 }

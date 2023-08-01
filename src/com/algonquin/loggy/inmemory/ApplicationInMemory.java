@@ -3,6 +3,7 @@ package com.algonquin.loggy.inmemory;
 import java.util.*;
 
 import com.algonquin.loggy.beans.Log;
+import com.algonquin.loggy.beans.TextLog;
 import com.algonquin.loggy.services.ApplicationService;
 
 public class ApplicationInMemory implements ApplicationService {
@@ -31,11 +32,14 @@ public class ApplicationInMemory implements ApplicationService {
     public void createLog(Log log) {
         List<Log> logs = this.logs.get(log.getId());
         logs.add(log);
+
     }
 
     @Override
-    public void updateLog(Log log,Log log1) {
+    public void updateLog(Log log) {
         List<Log> logs = this.logs.get(log.getId());
+        Log log1 = findLog(logs, log);
+        if(log.getFile()==null)log.setFile(log1.getFile());
         logs.remove(log1);
         logs.add(log);
     }
@@ -52,7 +56,7 @@ public class ApplicationInMemory implements ApplicationService {
         if (log1 == null) {
             createLog(log);
         } else {
-            updateLog(log,log1);
+            updateLog(log);
         }
     }
 
@@ -77,10 +81,30 @@ public class ApplicationInMemory implements ApplicationService {
         Log te = null;
         for (Log temp : logs) {
             if(temp.getLogId().equals(log.getLogId())){
-                te=log;
+                te=temp;
             }
         }
         return te;
+    }
+
+    public Log getLogOfUser(String uid,String logId){
+        List<Log> logsOfUser = getLogsOfUser(uid);
+        TextLog textLog = new TextLog();
+        textLog.setLogId(logId);
+        Log log = findLog(logsOfUser, textLog);
+        return new TextLog(log.getTitle(),log.getContent(),log.getId(),log.getFile(),log.getLogId());
+    }
+
+    public int getNewLogId(String uid){
+        List<Log> logsOfUser = getLogsOfUser(uid);
+        if(logsOfUser.size()==0)return 1;
+        int maxId = Integer.MIN_VALUE;
+        for (Log log : logsOfUser) {
+            if(Integer.parseInt(log.getLogId()) > maxId){
+                maxId = Integer.parseInt(log.getLogId());
+            }
+        }
+        return maxId+1;
     }
 
 }

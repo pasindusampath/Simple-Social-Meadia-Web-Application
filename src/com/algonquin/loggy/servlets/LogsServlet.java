@@ -48,20 +48,15 @@ public class LogsServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String action = request.getParameter("action");
+        /*String action = request.getParameter("action");
         if ("delete".equals(action)) {
             delete(request);
-        }
+        }*/
 
         String title = "";
         String content = "";
         String id = request.getParameter("id");
         String uid = request.getParameter("uid");
-
-
-
-
-
 
         // Render response.
         String htmlResponse = printOutHead(request.getContextPath());
@@ -86,12 +81,13 @@ public class LogsServlet extends HttpServlet {
         String id = request.getParameter("id");
         String title = request.getParameter("title");
         String content = request.getParameter("content");
+        String action = request.getParameter("action");
         Part filePart = null;
         FileUpload uploadedFile = null;
         try {
             filePart= request.getPart("file");
             if (filePart != null && filePart.getSize() > 0) {
-                // Create a specific FileUpload object based on the file type
+                // Create a FileUpload object based on the file type
                 uploadedFile= new FileUpload(filePart);
             }
 
@@ -99,6 +95,33 @@ public class LogsServlet extends HttpServlet {
         } catch (IOException | ServletException e) {
             System.out.println(e.getMessage()+" Error Handled Success on Logs Servlet");
         }
+
+
+        if(action!=null){
+            if(action.equals("Edit")||action.equals("Delete")){
+                try {
+                    Log logOfUser = this.logs.getLogOfUser(uid, id);
+                    request.setAttribute("log", logOfUser);
+                    request.getRequestDispatcher("/edit_log.jsp").forward(request, response);
+                } catch (ServletException | IOException e) {
+                    e.printStackTrace();
+                }
+                return;
+            }
+            if(action.equals("updateLog")){
+                this.logs.updateLog(new TextLog(title,content,uid,uploadedFile,id));
+                try {
+                    doGet(request, response);
+                } catch (ServletException | IOException e) {
+                    System.out.println(e.getMessage()+"Error Handled Success on Logs Servlet");
+                }
+                return;
+
+            }
+            System.out.println(action);
+
+        }
+
         System.out.println(uid);
         if(!this.logs.isUserAvailable(uid)){
             this.logs.addUser(uid);
@@ -110,38 +133,15 @@ public class LogsServlet extends HttpServlet {
         }else {
             if (id == null || "".equals(id)) {
                 // Initialize id and continue with the rendering.
-                id = UUID.randomUUID().toString();
-                TextLog textLog = new TextLog(title, content, uid,uploadedFile);
-                textLog.setLogId(id);
+                TextLog textLog = new TextLog(title, content, uid,uploadedFile,String.valueOf(this.logs.getNewLogId(uid)));
                 this.logs.createLog(textLog);
+                //System.out.println("Log Created"+uid);
             } else {
                 // Read the record from memory.
-                this.logs.getLogsOfUser(uid);
-            /*Log log = this.logs.readLog(id);
-            if (log == null) {
-                // Log not found, initialize id and continue with the rendering.
-                id = "";
-            } else {
-                // Log found, initialize title and content.
-                title = log.getTitle();
-                content = log.getContent();
-            }*/
+
             }
         }
 
-
-
-        /*if (id == null || "".equals(id)) {
-            // Create the log.
-            log = new TextLog(title, content,uid);
-        } else {
-            // Read the log.
-            *//*log = this.logs.readLog(id);
-            log.setTitle(title);
-            log.setContent(content);*//*
-        }*/
-        // Update the log.
-        //this.logs.createOrUpdateLog(log);
 
         // Process GET for rendering the page with updates.
         try {
@@ -191,29 +191,8 @@ public class LogsServlet extends HttpServlet {
         String out = ""
                 + " ";
         // This is the actual List.
-        /*writer.write("<table class=\"table\">\n");
-        writer.write("<thead>\n");
-        writer.write("<tr>\n");
-        writer.write("<th scope=\"col\" class=\"col-2\">#</th>\n");
-        writer.write("<th scope=\"col\" class=\"col-2\">Title</th>\n");
-        writer.write("<th scope=\"col\">Content</th>\n");
-        writer.write("<th scope=\"col\" class=\"col-2\">Actions</th>\n");
-        writer.write("</tr>\n");
-        writer.write("</thead>\n");
-        writer.write("<tbody>\n");*/
-        /*out += ""
-                + ""
-                    + ""
-                        + ""
-                        + ""
-                        + ""
-                        + ""
-                    + "" +
-                ""
-                +"";*/
-
         for (Log logItem : list) {
-            out += printOutBodyItem(logItem,writer);
+            printOutBodyItem(logItem,writer);
         }
         /*writer.write("</tbody>\n");
         writer.write("</table>\n");*/
@@ -228,26 +207,31 @@ public class LogsServlet extends HttpServlet {
         String imagePath = "C:\\Users\\Pasindu Sampath\\Desktop\\loggy-lab-master\\resource\\test.jpg";
 
         writer.write("<form action=\"/test/logs\" method=\"post\">");
-        writer.write("<input type=\"hidden\" name=\"id\" value=\"" + log.getId() + "\"/>");
+        writer.write("<input type=\"hidden\" name=\"id\" value=\"" + log.getLogId() + "\"/>");
+        writer.write("<input type=\"hidden\" name=\"uid\" value=\"" + log.getId() + "\"/>");
         writer.write("<div style=\"border: 1px solid #ccc; padding: 10px; width: 300px; margin: 10px;\">");
         writer.write("<h2 style=\"margin: 0; padding: 0;\">"+log.getTitle()+"</h2>");
-        if(log.getFile().getContentType().contains("image"))
-        writer.write("<img src=\"data:image/jpeg;base64," + java.util.Base64.getEncoder().encodeToString(log.getFile().getFileData()) + "\" alt=\"Image Description\" style=\"width: 100%; height: auto;\">\n");
-        if(log.getFile().getContentType().contains("audio")){
-            writer.write("<audio controls>\n");
-            writer.write("  <source src=\"data:audio/mpeg;base64," + java.util.Base64.getEncoder().encodeToString(log.getFile().getFileData()) + "\" type=\"audio/mpeg\">\n");
-            writer.write("  Your browser does not support the audio element.\n");
-            writer.write("</audio>\n");
-        }
-        if(log.getFile().getContentType().contains("video")){
-            writer.write("<video controls>\n");
-            writer.write("  <source src=\"data:video/mp4;base64," + java.util.Base64.getEncoder().encodeToString(log.getFile().getFileData()) + "\" type=\"video/mp4\">\n");
-            writer.write("  Your browser does not support the video element.\n");
-            writer.write("</video>\n");
+        if(log.getFile()!=null){
+            if(log.getFile().getContentType().contains("image")){
+                writer.write("<img src=\"data:image/jpeg;base64," + java.util.Base64.getEncoder().encodeToString(log.getFile().getFileData()) + "\" alt=\"Image Description\" style=\"width: 100%; height: auto;\">\n");
+            }
+
+            if(log.getFile().getContentType().contains("audio")){
+                writer.write("<audio controls>\n");
+                writer.write("  <source src=\"data:audio/mpeg;base64," + java.util.Base64.getEncoder().encodeToString(log.getFile().getFileData()) + "\" type=\"audio/mpeg\">\n");
+                writer.write("  Your browser does not support the audio element.\n");
+                writer.write("</audio>\n");
+            }
+            if(log.getFile().getContentType().contains("video")){
+                writer.write("<video controls>\n");
+                writer.write("  <source src=\"data:video/mp4;base64," + java.util.Base64.getEncoder().encodeToString(log.getFile().getFileData()) + "\" type=\"video/mp4\">\n");
+                writer.write("  Your browser does not support the video element.\n");
+                writer.write("</video>\n");
+            }
         }
         writer.write("<p style=\"margin: 5px 0;\">"+log.getContent()+"</p>");
-        writer.write("<input type=\"submit\" value=\"Edit\">");
-        writer.write("<input type=\"submit\" value=\"Delete\">");
+        writer.write("<input type=\"submit\" name=\"action\" value=\"Edit\">");
+        writer.write("<input type=\"submit\" name=\"action\" value=\"Delete\">");
         writer.write("</div>\n");
         writer.write("</form>\n");
         /*writer.write("<tr>\n");

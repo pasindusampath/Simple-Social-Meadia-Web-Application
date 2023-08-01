@@ -14,7 +14,7 @@ public interface ApplicationService {
 
     public void createLog(Log log);
 
-    public void updateLog(Log log,Log log1);
+    public void updateLog(Log log);
 
     public void deleteLog(String id);
 
@@ -25,5 +25,8 @@ public interface ApplicationService {
     public boolean isUserAvailable(String id);
 
     public List<Log> getLogsOfUser(String uid);
+
+    public Log getLogOfUser(String uid,String logId);
+    public int getNewLogId(String uid);
 
 }

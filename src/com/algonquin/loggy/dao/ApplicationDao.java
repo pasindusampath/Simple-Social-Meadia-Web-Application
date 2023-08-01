@@ -14,6 +14,13 @@ import com.algonquin.loggy.beans.TextLog;
 import com.algonquin.loggy.services.ApplicationService;
 
 public class ApplicationDao implements ApplicationService {
+
+    private DBConnection dbConnection ;
+
+    public ApplicationDao() {
+        dbConnection = new DBConnection();
+    }
+
     @Override
     public Map<String, List<Log>> readLogs() {
         return null;
@@ -30,7 +37,7 @@ public class ApplicationDao implements ApplicationService {
     }
 
     @Override
-    public void updateLog(Log log, Log log1) {
+    public void updateLog(Log log) {
 
     }
 
@@ -57,6 +64,16 @@ public class ApplicationDao implements ApplicationService {
     @Override
     public List<Log> getLogsOfUser(String uid) {
         return null;
+    }
+
+    @Override
+    public Log getLogOfUser(String uid, String logId) {
+        return null;
+    }
+
+    @Override
+    public int getNewLogId(String uid) {
+        return 0;
     }
 
     /*public Map<UUID, Log> readLogs() {

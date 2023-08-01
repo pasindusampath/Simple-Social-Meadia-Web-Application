@@ -13,12 +13,13 @@ public abstract class Log {
     public Log() {
     }
 
-    public Log(String title, String content,String uid,FileUpload file) {
+    public Log(String title, String content,String uid,FileUpload file,String logId) {
         this.id = uid;
         this.title = title;
         this.content = content;
         this.createTimestamp = new Date();
         this.file = file;
+        this.logId = logId;
     }
 
     /**
@@ -102,4 +103,6 @@ public abstract class Log {
     public void setFile(FileUpload file) {
         this.file = file;
     }
+
+
 }
