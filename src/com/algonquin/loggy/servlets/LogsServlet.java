@@ -128,8 +128,6 @@ public class LogsServlet extends HttpServlet {
             System.out.println(action);
 
         }
-
-        System.out.println(uid);
         if(!this.logs.isUserAvailable(uid)){
             this.logs.addUser(uid);
         }
@@ -184,7 +182,7 @@ public class LogsServlet extends HttpServlet {
             writer.write(".custom-file-upload:hover { background-color: #0056b3; }");
             writer.write(".log-container { border: 1px solid #ccc; padding: 10px; margin: 10px; }");
             writer.write(".log-container h2 { margin: 0; padding: 0; }");
-            writer.write(".log-container img { display: block; width: 100%; height: auto; margin: 10px 0; }");
+            writer.write(".log-container img,.log-container video { display: block; width: 100%; height: auto; margin: 10px 0; }");
             writer.write(".log-container p { margin: 5px 0; }");
             writer.write(".log-container input[type=\"submit\"] { background-color: #007bff; color: #fff; padding: 8px 16px; margin-right: 5px; border: none; border-radius: 4px; cursor: pointer; }");
             writer.write(".log-container input[type=\"submit\"]:hover { background-color: #0056b3; }");

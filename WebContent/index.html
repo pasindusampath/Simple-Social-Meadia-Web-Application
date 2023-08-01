@@ -1,14 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Example</title>
-    </head>
-    <body>
-        <form action="/test/logs" method="post">
-            <input type="hidden" name="actionType" value="login">
-            <input type="text" name="uid" placeholder="id"/>
-            <input type="submit" value="Start Logging"/>
-        </form>
+<head>
+    <title>Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-    </body>
+        form {
+            width: 300px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        input[type="text"]::placeholder {
+            color: #aaa;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+<form action="/test/logs" method="post">
+    <input type="hidden" name="actionType" value="login">
+    <input type="text" name="uid" placeholder="Enter your ID">
+    <input type="submit" value="Start Logging">
+</form>
+</body>
 </html>
