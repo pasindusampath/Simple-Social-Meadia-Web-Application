@@ -8,6 +8,7 @@ import com.algonquin.loggy.services.ApplicationService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -59,12 +60,13 @@ public class LogsServlet extends HttpServlet {
         String uid = request.getParameter("uid");
 
         // Render response.
-        String htmlResponse = printOutHead(request.getContextPath());
+        PrintWriter writer = response.getWriter();
+        String htmlResponse = printOutHead(writer);
         htmlResponse += printOutBodyForm(uid, title, content);
         // Read all logs, assign to local variable and sent to printOutBodyList
         //Map<UUID, Log> logs = this.logs.readLogs();
         List<Log> logsOfUser = this.logs.getLogsOfUser(uid);
-        PrintWriter writer = response.getWriter();
+
         writer.write(htmlResponse);
         printOutBodyList(logsOfUser,writer);
         writer.write(printOutFoot());
@@ -165,11 +167,34 @@ public class LogsServlet extends HttpServlet {
     }
 
     // This is the HTML code generated entirely from the Servlet.
-    private String printOutHead(String root) {
-        String out = "<!DOCTYPE html>\n" + "	<html lang=\"en\">\n" + "	    <head>\n"
-                + "	        <title>Example</title>\n" + "         <body id=\"page-top\">\n";
-
-        return out;
+    private String printOutHead(Writer writer) {
+        try {
+            writer.write("<!DOCTYPE html>\n" + "	<html lang=\"en\">\n" + "<head>\n");
+            writer.write( "<title>Example</title>\n" );
+            writer.write("<style>\n");
+            writer.write("body { font-family: Arial, sans-serif; background-color: #f0f0f0; margin: 0; padding: 0; }");
+            writer.write(".masthead { padding: 80px; background-color: #007bff; text-align: center; }");
+            writer.write(".masthead h1 { font-size: 36px; margin-bottom: 20px; }");
+            writer.write("form { max-width: 600px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); }");
+            writer.write("label { display: block; font-weight: bold; margin-bottom: 5px; }");
+            writer.write("input[type=\"text\"], input[type=\"file\"] { width: 97%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; }");
+            writer.write("input[type=\"submit\"], input[type=\"button\"] { background-color: #007bff; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }");
+            writer.write("input[type=\"submit\"]:hover, input[type=\"button\"]:hover { background-color: #0056b3; }");
+            writer.write(".custom-file-upload { display: inline-block; padding: 8px 20px; background-color: #007bff; color: #fff; border: none; border-radius: 4px; cursor: pointer; }");
+            writer.write(".custom-file-upload:hover { background-color: #0056b3; }");
+            writer.write(".log-container { border: 1px solid #ccc; padding: 10px; margin: 10px; }");
+            writer.write(".log-container h2 { margin: 0; padding: 0; }");
+            writer.write(".log-container img { display: block; width: 100%; height: auto; margin: 10px 0; }");
+            writer.write(".log-container p { margin: 5px 0; }");
+            writer.write(".log-container input[type=\"submit\"] { background-color: #007bff; color: #fff; padding: 8px 16px; margin-right: 5px; border: none; border-radius: 4px; cursor: pointer; }");
+            writer.write(".log-container input[type=\"submit\"]:hover { background-color: #0056b3; }");
+            writer.write("</style>\n");
+            writer.write("</head>\n");
+            writer.write("<body id=\"page-top\">\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
 
     }
 
@@ -210,17 +235,16 @@ public class LogsServlet extends HttpServlet {
 
     private String printOutBodyItem(Log log,PrintWriter writer) {
         String imagePath = "C:\\Users\\Pasindu Sampath\\Desktop\\loggy-lab-master\\resource\\test.jpg";
-
+        writer.write("<div class=\"log-container\">");
         writer.write("<form action=\"/test/logs\" method=\"post\">");
         writer.write("<input type=\"hidden\" name=\"id\" value=\"" + log.getLogId() + "\"/>");
         writer.write("<input type=\"hidden\" name=\"uid\" value=\"" + log.getId() + "\"/>");
-        writer.write("<div style=\"border: 1px solid #ccc; padding: 10px; width: 300px; margin: 10px;\">");
+        writer.write("<div style=\"border: 1px solid #ccc; padding: 10px; width: 300px; margin: auto;\">");
         writer.write("<h2 style=\"margin: 0; padding: 0;\">"+log.getTitle()+"</h2>");
         if(log.getFile()!=null){
             if(log.getFile().getContentType().contains("image")){
                 writer.write("<img src=\"data:image/jpeg;base64," + java.util.Base64.getEncoder().encodeToString(log.getFile().getFileData()) + "\" alt=\"Image Description\" style=\"width: 100%; height: auto;\">\n");
             }
-
             if(log.getFile().getContentType().contains("audio")){
                 writer.write("<audio controls>\n");
                 writer.write("  <source src=\"data:audio/mpeg;base64," + java.util.Base64.getEncoder().encodeToString(log.getFile().getFileData()) + "\" type=\"audio/mpeg\">\n");
@@ -237,6 +261,7 @@ public class LogsServlet extends HttpServlet {
         writer.write("<p style=\"margin: 5px 0;\">"+log.getContent()+"</p>");
         writer.write("<input type=\"submit\" name=\"action\" value=\"Edit\">");
         writer.write("<input type=\"submit\" name=\"action\" value=\"Delete\">");
+        writer.write("</div>\n");
         writer.write("</div>\n");
         writer.write("</form>\n");
         /*writer.write("<tr>\n");
