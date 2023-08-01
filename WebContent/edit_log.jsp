@@ -77,6 +77,23 @@
         input[type="submit"]:hover {
             background-color: #0056b3;
         }
+        input[type="file"] {
+            display: none;
+        }
+
+        .custom-file-upload {
+            display: inline-block;
+            padding: 8px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .custom-file-upload:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -91,7 +108,7 @@
     <input type="text" id="title" name="title" value="<%=log.getTitle()%>"><br>
 
     <label for="content">Content:</label>
-    <textarea id="content" name="content"><%=log.getId()%></textarea><br>
+    <textarea id="content" name="content"><%=log.getContent()%></textarea><br>
 
     <%if(log.getFile()!=null){%>
         <%if (log.getFile().getContentType().contains("image")){%>
@@ -110,8 +127,10 @@
             </video>
         <%}%>
     <%}%>
-    <input type="file" id="fileInput" name="file" accept=".mp3, .jpg, .jpeg, .png, .mp4" value="Change Meadia"><br>
-    <input type="submit" value="Update">
+    <label for="fileInput" class="custom-file-upload">Change Media</label>
+    <input type="file" id="fileInput" name="file" accept=".mp3, .jpg, .jpeg, .png, .mp4">
+    <input name="submit" type="submit" value="Update">
+    <input name="submit" type="submit" value="Delete">
 </form>
 
 </body>

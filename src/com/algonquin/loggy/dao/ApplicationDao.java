@@ -42,7 +42,7 @@ public class ApplicationDao implements ApplicationService {
     }
 
     @Override
-    public void deleteLog(String id) {
+    public void deleteLog(Log log) {
 
     }
 

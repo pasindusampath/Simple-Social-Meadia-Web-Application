@@ -45,8 +45,11 @@ public class ApplicationInMemory implements ApplicationService {
     }
 
     @Override
-    public void deleteLog(String id) {
-        logs.remove(UUID.fromString(id));
+    public void deleteLog(Log log) {
+        List<Log> logsOfUser = getLogsOfUser(log.getId());
+        Log log1 = findLog(logsOfUser, log);
+        logsOfUser.remove(log1);
+
     }
 
     @Override

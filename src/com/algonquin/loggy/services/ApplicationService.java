@@ -16,7 +16,7 @@ public interface ApplicationService {
 
     public void updateLog(Log log);
 
-    public void deleteLog(String id);
+    public void deleteLog(Log log);
 
     public void createOrUpdateLog(Log log);
 

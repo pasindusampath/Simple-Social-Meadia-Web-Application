@@ -109,7 +109,12 @@ public class LogsServlet extends HttpServlet {
                 return;
             }
             if(action.equals("updateLog")){
-                this.logs.updateLog(new TextLog(title,content,uid,uploadedFile,id));
+                TextLog textLog = new TextLog(title, content, uid, uploadedFile, id);
+                String submit = request.getParameter("submit");
+                if(submit.equals("Update"))
+                    this.logs.updateLog(textLog);
+                if(submit.equals("Delete"))
+                    this.logs.deleteLog(textLog);
                 try {
                     doGet(request, response);
                 } catch (ServletException | IOException e) {
@@ -155,7 +160,7 @@ public class LogsServlet extends HttpServlet {
         String id = request.getParameter("id");
         if (id != null && !id.equals("null")) {
             // Remove the log.
-            this.logs.deleteLog(id);
+            //this.logs.deleteLog(id);
         }
     }
 
