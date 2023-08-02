@@ -70,8 +70,6 @@ public class ApplicationDao implements ApplicationService {
             nu=7;
         }
         try {
-            // Assuming 'logs' table has columns named 'uuid', 'title', 'content', 'createTimestamp', 'FileName', 'fileType', 'fileFileData', and 'user_id'
-
             stmt = con.prepareStatement(query);
             stmt.setString(1, log.getTitle());
             stmt.setString(2, log.getContent());
@@ -87,9 +85,7 @@ public class ApplicationDao implements ApplicationService {
             System.out.println(i);
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle any exceptions that might occur during database operations
         } finally {
-            // Close the statement but not the connection
             try {
                 if (stmt != null) stmt.close();
             } catch (SQLException e) {
@@ -104,7 +100,7 @@ public class ApplicationDao implements ApplicationService {
         PreparedStatement stmt = null;
 
         try {
-            // Assuming 'logs' table has a column named 'uuid' to identify the log entry
+
             String query = "DELETE FROM logs WHERE uuid = ?";
             stmt = con.prepareStatement(query);
             stmt.setString(1, log.getId());
@@ -112,9 +108,9 @@ public class ApplicationDao implements ApplicationService {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle any exceptions that might occur during database operations
+
         } finally {
-            // Close the statement but not the connection
+
             try {
                 if (stmt != null) stmt.close();
             } catch (SQLException e) {
@@ -146,9 +142,9 @@ public class ApplicationDao implements ApplicationService {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle any exceptions that might occur during database operations
+
         } finally {
-            // Close the statement but not the connection
+
             try {
                 if (stmt != null) stmt.close();
             } catch (SQLException e) {
@@ -197,8 +193,6 @@ public class ApplicationDao implements ApplicationService {
         ResultSet rs = null;
 
         try {
-            // Assuming 'users' table has a column named 'uuid' to identify the user and
-            // 'logs' table has a column named 'user_id' to relate to the user
             String query = "SELECT uuid, title, content, createTimestamp, FileName, fileType, fileFileData FROM logs WHERE user_id = ?";
             stmt = con.prepareStatement(query);
             stmt.setString(1, uid);
@@ -220,9 +214,9 @@ public class ApplicationDao implements ApplicationService {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle any exceptions that might occur during database operations
+
         } finally {
-            // Close the result set and statement but not the connection
+
             try {
                 if (rs != null) rs.close();
                 if (stmt != null) stmt.close();
@@ -242,8 +236,6 @@ public class ApplicationDao implements ApplicationService {
         ResultSet rs = null;
 
         try {
-            // Assuming 'users' table has a column named 'uuid' to identify the user and
-            // 'logs' table has a column named 'user_id' to relate to the user
             String query = "SELECT uuid, title, content, createTimestamp, FileName, fileType, fileFileData FROM logs WHERE user_id = ? AND uuid = ?";
             stmt = con.prepareStatement(query);
             stmt.setString(1, uid);
@@ -265,9 +257,7 @@ public class ApplicationDao implements ApplicationService {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle any exceptions that might occur during database operations
         } finally {
-            // Close the result set and statement but not the connection
             try {
                 if (rs != null) rs.close();
                 if (stmt != null) stmt.close();
@@ -310,135 +300,4 @@ public class ApplicationDao implements ApplicationService {
 
         return newLogId;
     }
-
-    /*public Map<UUID, Log> readLogs() {
-        Log log = null;
-        Map<UUID, Log> logs = new LinkedHashMap<UUID, Log>();
-
-        try {
-            // get connection to database
-            Connection connection = DBConnection.getConnectionToDatabase();
-
-            // write select query to get all the log
-            String sql = "select * from logs;";
-            PreparedStatement statement = connection.prepareStatement(sql);
-
-            // execute query, get resultset and return User info
-            ResultSet set = statement.executeQuery();
-            while (set.next()) {
-                log = new TextLog();
-                log.setId(UUID.fromString(set.getString("uuid")));
-                log.setTitle(set.getString("title"));
-                log.setContent(set.getString("content"));
-                // log.setCreateTimestamp(Date.parse(set.getDate("createTimestamp")));
-                logs.put(log.getId(), log);
-            }
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        }
-        return logs;
-    }
-
-    public Log readLog(String id) {
-        Log log = null;
-        try {
-            // get connection to database
-            Connection connection = DBConnection.getConnectionToDatabase();
-
-            // write select query to get the log
-            String sql = "select * from logs where uuid=?";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, id);
-
-            // execute query, get resultset and return Log info
-            ResultSet set = statement.executeQuery();
-            while (set.next()) {
-                log = new TextLog();
-                log.setId(UUID.fromString(set.getString("uuid")));
-                log.setTitle(set.getString("title"));
-                log.setContent(set.getString("content"));
-            }
-
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-        return log;
-    }
-
-    public void createLog(Log log) {
-        try {
-            // get connection to database
-            Connection connection = DBConnection.getConnectionToDatabase();
-
-            // write select query to get the log
-            String sql = "insert into logs (uuid, title, content) values (?, ?, ?);";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, log.getId().toString());
-            statement.setString(2, log.getTitle());
-            statement.setString(3, log.getContent());
-
-            // execute query, update resultset
-            statement.execute();
-
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    public void updateLog(Log log) {
-        try {
-            // get connection to database
-            Connection connection = DBConnection.getConnectionToDatabase();
-
-            // write select query to get the log
-            String sql = "update logs set title=?, content=? where uuid=?;";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, log.getTitle());
-            statement.setString(2, log.getContent());
-            statement.setString(3, log.getId().toString());
-
-            // execute query, update resultset
-            statement.execute();
-
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    public void deleteLog(String id) {
-        try {
-            // get connection to database
-            Connection connection = DBConnection.getConnectionToDatabase();
-
-            // write select query to get the log
-            String sql = "delete from logs where uuid=?;";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, UUID.fromString(id).toString());
-
-            // execute query, delete resultset
-            statement.execute();
-
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    @Override
-    public void createOrUpdateLog(Log log) {
-        Log locallog = readLog(log.getId().toString());
-        if (locallog == null) {
-            createLog(log);
-        } else {
-            updateLog(log);
-        }
-    }*/
-
 }

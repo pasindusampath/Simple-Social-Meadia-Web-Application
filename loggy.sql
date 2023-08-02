@@ -1,15 +1,26 @@
-CREATE TABLE `logs` (
-  `uuid` char(40) COLLATE utf8_unicode_ci NOT NULL,
-  `title` char(128) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `content` text COLLATE utf8_unicode_ci,
-  `createTimestamp` date DEFAULT NULL,
-  `FileName` NVARCHAR(100),
-  `fileType` VARCHAR(45),
-  `fileFileData` LONGBLOB,
-  PRIMARY KEY (`uuid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+create table users
+(
+    name char(40) not null,
+    date date     null,
+    constraint users_name_uindex
+        unique (name)
+);
 
+alter table users
+    add primary key (name);
 
-LOCK TABLES `logs` WRITE;
-INSERT INTO `logs` VALUES ('ac299eb1-599e-4599-b22b-95e889448793','Two','Another content is 2',NULL),('d2bbd408-2836-4c96-92b2-0d44210e8502','One','One content',NULL);
-UNLOCK TABLES;
+create table logs
+(
+    uuid            char(40) collate utf8_unicode_ci  not null
+        primary key,
+    title           char(128) collate utf8_unicode_ci null,
+    content         text collate utf8_unicode_ci      null,
+    createTimestamp date                              null,
+    FileName        varchar(100) charset utf8         null,
+    fileType        varchar(45)                       null,
+    fileFileData    longblob                          null,
+    user_id         char(40)                          null,
+    constraint logs_users_name_fk
+        foreign key (user_id) references users (name)
+            on update cascade on delete cascade
+);
