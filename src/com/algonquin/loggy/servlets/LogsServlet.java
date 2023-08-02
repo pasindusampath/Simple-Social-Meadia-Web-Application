@@ -3,6 +3,7 @@ package com.algonquin.loggy.servlets;
 import com.algonquin.loggy.beans.FileUpload;
 import com.algonquin.loggy.beans.Log;
 import com.algonquin.loggy.beans.TextLog;
+import com.algonquin.loggy.dao.ApplicationDao;
 import com.algonquin.loggy.inmemory.ApplicationInMemory;
 import com.algonquin.loggy.services.ApplicationService;
 
@@ -39,7 +40,7 @@ public class LogsServlet extends HttpServlet {
      */
     public LogsServlet() {
         super();
-        this.logs = new ApplicationInMemory();
+        this.logs = new ApplicationDao();
 //        this.logs = new ApplicationDao();
     }
 
@@ -102,7 +103,11 @@ public class LogsServlet extends HttpServlet {
         if(action!=null){
             if(action.equals("Edit")||action.equals("Delete")){
                 try {
+                    System.out.println("String log id : "+id);
+                    System.out.println("String User id : "+uid);
                     Log logOfUser = this.logs.getLogOfUser(uid, id);
+                    System.out.println("String log id : "+logOfUser.getLogId());
+                    System.out.println("String User id : "+logOfUser.getId());
                     request.setAttribute("log", logOfUser);
                     request.getRequestDispatcher("/edit_log.jsp").forward(request, response);
                 } catch (ServletException | IOException e) {

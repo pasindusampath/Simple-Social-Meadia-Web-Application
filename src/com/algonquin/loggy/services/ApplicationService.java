@@ -8,10 +8,6 @@ import com.algonquin.loggy.beans.Log;
 
 public interface ApplicationService {
 
-    public Map<String, List<Log>> readLogs();
-
-    public List<Log> readLog(String id);
-
     public void createLog(Log log);
 
     public void updateLog(Log log);

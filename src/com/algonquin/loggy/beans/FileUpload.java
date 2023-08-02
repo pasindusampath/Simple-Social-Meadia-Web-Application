@@ -9,6 +9,9 @@ public class FileUpload {
     private String contentType;
     private byte[] fileData;
 
+    public FileUpload() {
+    }
+
     public FileUpload(Part part) {
         this.fileName = getFileName(part);
         this.contentType = part.getContentType();

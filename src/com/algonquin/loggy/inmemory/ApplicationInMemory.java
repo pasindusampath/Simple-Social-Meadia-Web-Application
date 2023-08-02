@@ -14,16 +14,6 @@ public class ApplicationInMemory implements ApplicationService {
         this.logs = new LinkedHashMap<String, List<Log>>();
     }
 
-    @Override
-    public Map<String, List<Log>> readLogs() {
-        return logs;
-    }
-
-    /*public List<Log> readLogs(String id) {
-        return logs.get(id);
-    }*/
-
-    @Override
     public List<Log> readLog(String id) {
         return logs.get(id);
     }
