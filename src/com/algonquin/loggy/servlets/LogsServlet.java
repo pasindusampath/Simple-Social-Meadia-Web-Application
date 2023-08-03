@@ -204,7 +204,7 @@ public class LogsServlet extends HttpServlet {
     private String printOutBodyForm(String id, String title, String content) {
         String out = "        <!-- Form Section-->\n"
                 + "        <header class=\"masthead bg-primary text-white text-center\">\n"
-                + "          <h1>Log ahead</h1>\n" + "        <form action=\"logs\" method=\"post\" enctype=\"multipart/form-data\">\n"
+                + "          <h1>Loggy</h1>\n" + "        <form action=\"logs\" method=\"post\" enctype=\"multipart/form-data\">\n"
                 + "          <input type=\"hidden\" name=\"uid\" value=\"" + id + "\">"
                 + "          <label for=\"fname\">Title:</label><br>\n"
                 + "          <input type=\"text\" id=\"title\" name=\"title\" value=\"" + title + "\"><br>\n"

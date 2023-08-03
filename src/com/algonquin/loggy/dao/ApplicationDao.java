@@ -103,7 +103,7 @@ public class ApplicationDao implements ApplicationService {
 
             String query = "DELETE FROM logs WHERE uuid = ?";
             stmt = con.prepareStatement(query);
-            stmt.setString(1, log.getId());
+            stmt.setString(1, log.getLogId());
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -193,7 +193,7 @@ public class ApplicationDao implements ApplicationService {
         ResultSet rs = null;
 
         try {
-            String query = "SELECT uuid, title, content, createTimestamp, FileName, fileType, fileFileData FROM logs WHERE user_id = ?";
+            String query = "SELECT uuid, title, content, createTimestamp, FileName, fileType, fileFileData FROM logs  WHERE user_id = ? order by createTimestamp DESC";
             stmt = con.prepareStatement(query);
             stmt.setString(1, uid);
             rs = stmt.executeQuery();
